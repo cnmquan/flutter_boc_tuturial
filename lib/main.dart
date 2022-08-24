@@ -32,11 +32,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+// Action: abstract event
 @immutable
 abstract class LoadAction {
   const LoadAction();
 }
 
+// event
 @immutable
 class LoadPersonAction implements LoadAction {
   final PersonUrl url;
@@ -62,6 +65,7 @@ extension UrlString on PersonUrl {
   }
 }
 
+// model
 @immutable
 class Person {
   final String name;
@@ -88,6 +92,7 @@ Future<Iterable<Person>> getPersons(String url) => HttpClient()
     .then((list) =>
         list.map((json) => Person.fromJson(json))); // convert list --> json
 
+// state
 @immutable
 class FetchResult {
   final Iterable<Person> persons;
@@ -100,6 +105,10 @@ class FetchResult {
       'FetchResult (isRetrieveFromCache = $isRetrieveFromCache, person = $persons)';
 }
 
+/// bloc: nhận 1 stream event và trả về 1 stream state
+/// LoadAction: event
+/// FetchResult: state
+/// State có thể null
 class PersonsBloc extends Bloc<LoadAction, FetchResult?> {
   final Map<PersonUrl, Iterable<Person>> _cache = {};
   PersonsBloc() : super(null) {
